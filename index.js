@@ -124,7 +124,7 @@ function rectangularCollision({rectangle1,rectangle2})
         rectangle1.attackBox.position.y<= rectangle2.position.y+rectangle2.height)
 }
 let gameOver= document.querySelector("#gameOver");
-let display= document.querySelector("display");
+let display= document.querySelector("#display");
 function checkWin({player1,player2})
 {
     display.innerHTML="Vaisakyo!";
