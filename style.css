@@ -42,7 +42,7 @@ body{
    align-items:center;
    justify-content:center;
    font-family: 'Gajraj One', cursive;
-   font-size: 25px;
+   font-size: fit-content;
 }
 #gameOver{
     display:none;
