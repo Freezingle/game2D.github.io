@@ -6,6 +6,7 @@ canvas.height=576;
 
 ctx.fillRect(0,0,canvas.width,canvas.height);
 const gravity= 0.4;
+const myAudio= new Audio();
 
 class Sprite{
     constructor({position,velocity,offset},color)
@@ -45,6 +46,7 @@ class Sprite{
     {
         
         this.draw();
+
       //drawing atk box literally!
         this.attackBox.position.x=this.position.x+this.attackBox.offset.x;  
         this.attackBox.position.y= this.position.y;
@@ -86,6 +88,7 @@ const player1= new Sprite({
     y:0
    }
 },
+
 "red");
 
 const player2= new Sprite({
@@ -97,7 +100,7 @@ const player2= new Sprite({
     y:0
 },
    offset:{
-    x:-50,
+    x:0,
     y:0
    }},"blue");
 
@@ -115,7 +118,6 @@ const keys={
         pressed:false
     }
 }
-
 function rectangularCollision({rectangle1,rectangle2})
 {
     return(rectangle1.attackBox.position.x+rectangle1.attackBox.width>= rectangle2.position.x &&
@@ -127,8 +129,8 @@ let gameOver= document.querySelector("#gameOver");
 let display= document.querySelector("#display");
 function checkWin({player1,player2})
 {
-    display.innerHTML="Vaisakyo!";
    gameOver.style.display="flex";
+   display.innerHTML= "Vaisakyo!"
    if(player1.hitPoints<=0)
    {
     result.innerHTML="PLAYER2 WINS !!";
@@ -141,6 +143,7 @@ function checkWin({player1,player2})
    {
     result.innerHTML="DRAW!!";
    }
+  
 
    document.querySelector("#restartbtn").onclick= function(){
 
@@ -157,6 +160,8 @@ function animate()
     player2.update();
     player1.velocity.x=0;
     player2.velocity.x=0;
+    player1.attackBox.offset.x=0;
+    player2.attackBox.offset.x=0;
      //PLAYER1 MOVEMENT
     if(keys.a.pressed && player1.lastkey=='a')
     { player1.velocity.x=-5;}
@@ -170,6 +175,17 @@ function animate()
     else if(keys.ArrowRight.pressed && player2.lastkey=='ArrowRight')
     {player2.velocity.x=5;}
 
+    //offset placing of attackBox
+    if(player1.position.x+player1.width>=player2.position.x)
+    {
+       player1.attackBox.offset.x=-50;
+        
+    }
+    else if(player2.position.x>=player1.position.x+player1.width)
+    {
+        player2.attackBox.offset.x=-50;
+    }
+
     //Collision Detection
     //player1
     if( rectangularCollision({rectangle1:player1,
@@ -177,9 +193,11 @@ function animate()
          && player1.isAttacking)
     {
         player1.isAttacking=false;
-        console.log("collided player1 ");
+        console.log("player1 attacked");
         player2.hitPoints-=10;
         document.querySelector("#player2H").style.width= player2.hitPoints+"%";
+        myAudio.src="mixkit-man-in-pain-2197.wav";
+        myAudio.play();
     
 
     }
@@ -190,13 +208,15 @@ function animate()
         && player2.isAttacking)
    {
        player2.isAttacking=false;
-       console.log("collided player2");
+       console.log("player2 attacked");
        player1.hitPoints-=10;
        document.querySelector("#player1H").style.width= player1.hitPoints+"%";
+       myAudio.src="mixkit-ow-exclamation-of-pain-2204.wav";
+       myAudio.play();
    }
    if(player1.hitPoints<=0 || player2.hitPoints<=0)
    {
-    checkWin({player1,player2});
+       checkWin({player1,player2});
    }
 
 }
@@ -234,11 +254,11 @@ window.addEventListener("keydown", (event)=>
         if(player2.position.y+150>=576)
         {player2.velocity.y=-15;}
         break;
-    case "Insert":
+    case "ArrowDown":
         player2.attack();
         break;
  }
- console.log(event.key);
+ 
 
  
 })
@@ -262,5 +282,4 @@ window.addEventListener("keyup", (event)=>
     }
 })
 
-/*PASS DETECTOR :
-THE ATTACK RECTANGLE MUST BE FACING THE OPPONENT AT ALL TIMES*/
+//adding audios
