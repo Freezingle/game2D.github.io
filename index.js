@@ -6,7 +6,7 @@ canvas.height=576;
 
 ctx.fillRect(0,0,canvas.width,canvas.height);
 const gravity= 0.4;
-const myAudio= new Audio();
+
 
 class Sprite{
     constructor({position,velocity,offset},color)
@@ -130,7 +130,7 @@ let display= document.querySelector("#display");
 function checkWin({player1,player2})
 {
    gameOver.style.display="flex";
-   display.innerHTML= "Vaisakyo!"
+   display.innerHTML= "Game Over!"
    if(player1.hitPoints<=0)
    {
     result.innerHTML="PLAYER2 WINS !!";
@@ -163,16 +163,16 @@ function animate()
     player1.attackBox.offset.x=0;
     player2.attackBox.offset.x=0;
      //PLAYER1 MOVEMENT
-    if(keys.a.pressed && player1.lastkey=='a')
+    if(keys.a.pressed && player1.lastkey=='a' && player1.position.x>0)
     { player1.velocity.x=-5;}
 
-    else if(keys.d.pressed && player1.lastkey=='d')
+    else if(keys.d.pressed && player1.lastkey=='d'&& player1.position.x+player1.width<canvas.width)
     {player1.velocity.x=5;}
 
     //PLAYER2 MOVEMENT
-    if(keys.ArrowLeft.pressed && player2.lastkey=='ArrowLeft')
+    if(keys.ArrowLeft.pressed && player2.lastkey=='ArrowLeft'&& player2.position.x>0)
     {player2.velocity.x=-5;}
-    else if(keys.ArrowRight.pressed && player2.lastkey=='ArrowRight')
+    else if(keys.ArrowRight.pressed && player2.lastkey=='ArrowRight' && player2.position.x+player2.width<canvas.width)
     {player2.velocity.x=5;}
 
     //offset placing of attackBox
@@ -196,8 +196,7 @@ function animate()
         console.log("player1 attacked");
         player2.hitPoints-=10;
         document.querySelector("#player2H").style.width= player2.hitPoints+"%";
-        myAudio.src="mixkit-man-in-pain-2197.wav";
-        myAudio.play();
+        
     
 
     }
@@ -211,8 +210,7 @@ function animate()
        console.log("player2 attacked");
        player1.hitPoints-=10;
        document.querySelector("#player1H").style.width= player1.hitPoints+"%";
-       myAudio.src="mixkit-ow-exclamation-of-pain-2204.wav";
-       myAudio.play();
+       
    }
    if(player1.hitPoints<=0 || player2.hitPoints<=0)
    {
@@ -282,4 +280,3 @@ window.addEventListener("keyup", (event)=>
     }
 })
 
-//adding audios
