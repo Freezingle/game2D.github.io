@@ -1,7 +1,7 @@
 const roomName = JSON.parse(document.getElementById('room-name').textContent);
 
         const gameSocket = new WebSocket(
-            'ws://'
+            'wss://'
             + window.location.host
             + '/ws/game/'
             + roomName
@@ -18,6 +18,7 @@ gameSocket.onmessage = function(e) {
 
 gameSocket.onclose = function(e) {
     console.error('Chat socket closed unexpectedly');};
+
 
 
 
@@ -247,6 +248,39 @@ function animate()
 }
 window.addEventListener("load",animate());
 
+
+gameSocket.onmessage = function(e) {
+    const data = JSON.parse(e.data);
+    if (data.type === 'keydown') {
+        switch (data.key) {
+            case "a":
+            keys.ArrowLeft.pressed=true;
+            player2.lastkey='ArrowLeft';
+            break;
+        case "d":
+            keys.ArrowRight.pressed=true;
+            player2.lastkey="ArrowRight";
+            break;
+        case "w":
+            if(player2.position.y+150>=576)
+            {player2.velocity.y=-15;}
+            break;
+        case " ":
+            player2.attack();
+            break;
+    };};
+    if (data.type === 'keyup') {
+        switch (data.key) {
+        case "a":
+        keys.ArrowLeft.pressed=false;
+        break;
+        case "d":
+            keys.ArrowRight.pressed=false;
+            break;
+    };};
+};
+
+
 window.addEventListener("keydown", (event)=>
 {
  switch(event.key)
@@ -254,34 +288,37 @@ window.addEventListener("keydown", (event)=>
     case "d":
        keys.d.pressed=true;
        player1.lastkey='d';
-        break;
+       gameSocket.send(JSON.stringify({
+        'type': 'keydown',
+        'key': event.key
+    }));
+       break;
     case "a":
        keys.a.pressed= true;
        player1.lastkey='a';
+       gameSocket.send(JSON.stringify({
+        'type': 'keydown',
+        'key': event.key
+    }));
        break;
     case "w":
         
         if(player1.position.y+150>=576)
         {player1.velocity.y=-15;}
+        gameSocket.send(JSON.stringify({
+        'type': 'keydown',
+        'key': event.key
+    }));
         break;
     case " ":
         player1.attack();
+        gameSocket.send(JSON.stringify({
+        'type': 'keydown',
+        'key': event.key
+    }));
         break;
-    case "ArrowLeft":
-            keys.ArrowLeft.pressed=true;
-            player2.lastkey='ArrowLeft';
-            break;
-    case "ArrowRight":
-        keys.ArrowRight.pressed=true;
-        player2.lastkey="ArrowRight";
-        break;
-    case "ArrowUp":
-        if(player2.position.y+150>=576)
-        {player2.velocity.y=-15;}
-        break;
-    case "ArrowDown":
-        player2.attack();
-        break;
+    
+    
  }
  
 
@@ -294,16 +331,19 @@ window.addEventListener("keyup", (event)=>
  {
     case "d":
         keys.d.pressed=false;
+        gameSocket.send(JSON.stringify({
+        'type': 'keyup',
+        'key': event.key
+    }));
         break;
     case "a":
         keys.a.pressed=false;
+        gameSocket.send(JSON.stringify({
+        'type': 'keyup',
+        'key': event.key
+    }));
         break;
-    case "ArrowLeft":
-        keys.ArrowLeft.pressed=false;
-        break;
-    case "ArrowRight":
-        keys.ArrowRight.pressed=false;
-        break;
+    
     }
 })
 

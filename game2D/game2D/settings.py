@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-wm#io6tng8420wg$6vh)sn)(($&5k_-e^4ietcp3u-nj6rcwp(
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -73,15 +73,19 @@ TEMPLATES = [
 WSGI_APPLICATION = 'game2D.wsgi.application'
 ASGI_APPLICATION = "game2D.asgi.application"
 
+# CHANNEL_LAYERS = {
+#     "default": {
+#         "BACKEND": "channels_redis.core.RedisChannelLayer",
+#         "CONFIG": {
+#             "hosts": [("127.0.0.1", 6379)],
+#         },
+#     },
+# }
 CHANNEL_LAYERS = {
     "default": {
-        "BACKEND": "channels_redis.core.RedisChannelLayer",
-        "CONFIG": {
-            "hosts": [("127.0.0.1", 6379)],
-        },
-    },
+        "BACKEND": "channels.layers.InMemoryChannelLayer"
+    }
 }
-
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
